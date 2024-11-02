@@ -8,7 +8,7 @@ const userRepository = AppDataSource.getRepository(User);
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { email, password } = req.body;
+    const { email, password, fullName } = req.body;
 
     const existingUser = await userRepository.findOne({ where: { email } });
     if (existingUser) {
@@ -19,6 +19,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     const user = new User();
     user.email = email;
     user.password = password;
+    user.fullName = fullName;
 
     const errors = await validate(user);
     if (errors.length > 0) {
