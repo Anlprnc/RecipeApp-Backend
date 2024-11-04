@@ -20,6 +20,9 @@ export class User {
   @Column({ nullable: true })
   avatarUrl?: string;
 
+  @Column('simple-array', { nullable: true, default: [] })
+  favorites!: string[];
+
   @CreateDateColumn()
   createdAt!: Date;
 
