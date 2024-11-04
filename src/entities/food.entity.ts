@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
 import { RecipeStep } from "./recipe-step.entity"
+import { Category } from "./category.entity"
 
 export enum RecipeType {
     SOUP = "Soup",
@@ -15,46 +16,48 @@ export enum RecipeType {
 
 @Entity('foods')
 export class Food {
-    @PrimaryGeneratedColumn("uuid")
-    id!: string
+  @PrimaryGeneratedColumn("uuid")
+  id!: string
 
-    @Column({
-        name: 'image_name',
-        type: 'varchar'
-    })
-    imageName!: string
+  @Column({
+      name: 'image_name',
+      type: 'varchar'
+  })
+  imageName!: string
 
-    @Column({
-        type: 'varchar',
-        length: 255
-    })
-    title!: string
+  @Column({
+      type: 'varchar',
+      length: 255
+  })
+  title!: string
 
-    @Column({
-        type: 'text'
-    })
-    description!: string
+  @Column({
+      type: 'text'
+  })
+  description!: string
 
-    @Column({
-        type: 'simple-array'
-    })
-    ingredients!: string[]
+  @Column({
+      type: 'simple-array'
+  })
+  ingredients!: string[]
 
-    @Column({
-        type: 'varchar'
-    })
-    time!: string
+  @Column({
+      type: 'varchar'
+  })
+  time!: string
 
-    @Column({
-        type: 'enum',
-        enum: RecipeType,
-        default: RecipeType.MAIN_DISHES
-    })
-    type!: RecipeType
+  @Column({
+      type: 'enum',
+      enum: RecipeType,
+      default: RecipeType.MAIN_DISHES
+  })
+  type!: RecipeType
 
-    @OneToMany(() => RecipeStep, step => step.food, {
-        cascade: true,
-        eager: true
-    })
-    steps!: RecipeStep[]
+  @OneToMany(() => RecipeStep, step => step.food, {
+      cascade: true,
+      eager: true
+  })
+  steps!: RecipeStep[]
+
+  category!: Category
 }

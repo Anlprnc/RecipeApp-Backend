@@ -1,6 +1,9 @@
 import { DataSource } from 'typeorm';
 import { User } from '../entities/user.entity';
 import dotenv from 'dotenv';
+import { Food, RecipeType } from '../entities/food.entity';
+import { Category } from '../entities/category.entity';
+import { RecipeStep } from '../entities/recipe-step.entity';
 
 dotenv.config();
 
@@ -13,7 +16,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: true,
-  entities: [User],
+  entities: [User, Food, Category, RecipeStep],
   subscribers: [],
   migrations: [],
 });
