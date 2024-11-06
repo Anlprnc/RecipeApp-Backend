@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { validate } from 'class-validator';
 import jwt from 'jsonwebtoken';
 import { AppDataSource } from '../config/database';
-import { User } from '../entities/user.entity';
+import { User, UserRole } from '../entities/user.entity';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -20,6 +20,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     user.email = email;
     user.password = password;
     user.fullName = fullName;
+    user.role = UserRole.USER;
 
     const errors = await validate(user);
     if (errors.length > 0) {
@@ -29,12 +30,12 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 
     await userRepository.save(user);
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET!, {
       expiresIn: '1d',
     });
 
     const { password: _, ...userWithoutPassword } = user;
-    res.status(201).json({ user: userWithoutPassword, token });
+    res.status(201).json({ user: { ...userWithoutPassword, role: user.role }, token });
   } catch (error) {
     res.status(400).json({ error: 'Registration failed' });
   }
@@ -50,12 +51,12 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
       return;
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET!, {
       expiresIn: '1d',
     });
 
     const { password: _, ...userWithoutPassword } = user;
-    res.status(200).json({ user: userWithoutPassword, token });
+    res.status(200).json({ user: { ...userWithoutPassword, role: user.role }, token });
   } catch (error) {
     res.status(401).json({ error: 'Login failed' });
   }

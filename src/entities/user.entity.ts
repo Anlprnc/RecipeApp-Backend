@@ -1,6 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsEnum } from 'class-validator';
 import bcrypt from 'bcryptjs';
+
+export enum UserRole {
+  USER = 'user',
+  MANAGER = 'manager',
+  ADMIN = 'admin'
+}
 
 @Entity('users')
 export class User {
@@ -22,6 +28,14 @@ export class User {
 
   @Column('simple-array', { nullable: true, default: [] })
   favorites!: string[];
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER
+  })
+  @IsEnum(UserRole)
+  role!: UserRole;
 
   @CreateDateColumn()
   createdAt!: Date;
